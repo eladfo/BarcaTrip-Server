@@ -63,7 +63,7 @@ async function signUp(req, res)
       if(! await returnError(res, flag)){
          return;
       }
-      var sqlRes = await DButilsAzure.execQuery("SELECT * FROM Country WHERE CountryID = '" + req.body.Country + "'" )
+      var sqlRes = await DButilsAzure.execQuery("SELECT * FROM Country WHERE Country = '" + req.body.Country + "'" )
       if(sqlRes.length == 0)
          flag= 400;
       else
@@ -75,11 +75,12 @@ async function signUp(req, res)
       sqlRes = await DButilsAzure.execQuery("INSERT INTO Users (Username, Password, FirstName, LastName, City, Country, Email) VALUES ('" + req.body.Username + "','" + req.body.Password + "','" + req.body.FirstName + "','" + req.body.LastName + "','" + req.body.City + "','" + req.body.Country + "','"+ req.body.Email + "')" )
       for(i = 0 ; i<req.body.QA.length ; i++)
       {
+		 console.log("INSERT INTO QA (Username, Question, Answer) VALUES ('" + req.body.Username + "','" + req.body.QA[i].q + "','" + req.body.QA[i].a+ "')");
          sqlRes = await DButilsAzure.execQuery("INSERT INTO QA (Username, Question, Answer) VALUES ('" + req.body.Username + "','" + req.body.QA[i].q + "','" + req.body.QA[i].a+ "')" )
       }
       for(i = 0 ; i<req.body.Categories.length ; i++)
       {
-         sqlRes = await DButilsAzure.execQuery("INSERT INTO Usercategories (Username, Category) VALUES ('" + req.body.Username + "','" + req.body.Categories[i] + "')" )
+         sqlRes = await DButilsAzure.execQuery("INSERT INTO Usercategories (Username, Category) VALUES ('" + req.body.Username + "','" + req.body.Categories[i] + "')" );
       }
       res.status(200).send({err: "The Username is added!"})
    }

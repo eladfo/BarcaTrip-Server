@@ -24,7 +24,6 @@ async function getRandomPOI(req, res){
                 index3 = Math.floor(Math.random() * (sqlRes.length-1));
 
             
-
             res.status(200).send({ "res1": sqlRes[index1] , "res2" :sqlRes[index2] , "res3": sqlRes[index3]});
             return; 
         }
@@ -198,7 +197,7 @@ async function getLastReview(req ,res)
 {
     try
     {
-        var a = await DButilsAzure.execQuery("SELECT Review , Date FROM UserReview WHERE POI_ID = '" + req.params.poiID + "' ORDER BY Date DESC ")
+        var a = await DButilsAzure.execQuery("SELECT Review , Date , Rank FROM UserReview WHERE POI_ID = '" + req.params.poiID + "' ORDER BY Date DESC ")
         if(a.length<2)
          res.status(200).send(a);
          else
@@ -281,7 +280,7 @@ async function getLastFavoritePOI(req ,res)
             }
             else
             {
-                res.status(200).send({ "res1": resql[0] , "res2" :resql[1]});
+                res.status(200).send(resql );
                 return; 
             }
     }
@@ -364,3 +363,19 @@ async function getAllFavoritePOI(req ,res)
     }
 }
 module.exports.getAllFavoritePOI = getAllFavoritePOI;
+
+//=====
+
+async function getAllFavoritePoiSort(req ,res)
+{
+    try{
+
+     var a = await DButilsAzure.execQuery("SELECT POI.ID,POI.Name, POI.Picture ,POI.Num_of_Users ,POI.Rank , POI.Description FROM FavoritePOI INNER JOIN POI ON FavoritePOI.POI_ID = POI.ID  AND FavoritePOI.Username = '" + req.params.Username+"' order by POI.Rank")
+     res.status(200).send(a)
+    return;
+    }
+    catch(err){
+        res.status(400).send({err:"The Request is faild!"})
+    }
+}
+module.exports.getAllFavoritePoiSort = getAllFavoritePoiSort;

@@ -32,7 +32,7 @@ app.listen(port, function () {
 
 app.use("/private", (req, res,next) => {
     var secret = "thisIsASecret";
-	const token = req.header("x-auth-token");
+	const token = req.header("Authorization");
 	// no token
 	if (!token) res.status(401).send("Access denied. No token provided.");
 	// verify token
@@ -183,7 +183,7 @@ app.post('/private/addPoiReview', async function(req, res)
     
 });
 
-app.get('/private/getLastReviews/:poiID', async function(req, res)
+app.get('/getLastReviews/:poiID', async function(req, res)
 {
     await poiMod.getLastReview(req ,res);
 });
@@ -205,6 +205,11 @@ app.get('/IncreaseWatchPOI/:POI_ID', async function(req, res)
     await poiMod.IncreaseWatchPOI(req ,res);
 });
 
+//========
+app.get('/private/getAllFavoritePoiSort/:Username', async function(req, res)
+{
+    await poiMod.getAllFavoritePoiSort(req ,res);
+});
 
 
 
